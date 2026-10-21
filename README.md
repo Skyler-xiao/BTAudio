@@ -5,7 +5,7 @@ Bluetooth audio (A2DP) for the Wii U. BTAudio streams the console's sound to Blu
 BTAudio is based on [Bloopair](https://github.com/GaryOderNichts/Bloopair) by GaryOderNichts and includes all of
 its controller support. It adds audio streaming to the Bluetooth stack and an Aroma plugin to control it.
 
-> **Status:** Work in progress. BTAudio has been tested on a single console with a small number of devices.
+> **Status:** Work in progress. BTAudio has been tested on a single console with a small number of devices. Use at your own Risk.
 
 ## Features
 - System-wide audio: Wii U Menu, HOME Menu, games and homebrew
