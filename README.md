@@ -1,118 +1,98 @@
 # BTAudio
 
-Bluetooth audio for the Wii U: plays the console's sound on Bluetooth headphones and speakers (A2DP).
+Bluetooth audio (A2DP) for the Wii U. BTAudio streams the console's sound to Bluetooth headphones and speakers.
 
-BTAudio is built on top of [Bloopair](https://github.com/GaryOderNichts/Bloopair) by GaryOderNichts. It contains
-all of Bloopair's controller support, plus audio streaming and an Aroma plugin to control it.
+BTAudio is based on [Bloopair](https://github.com/GaryOderNichts/Bloopair) by GaryOderNichts and includes all of
+its controller support. It adds audio streaming to the Bluetooth stack and an Aroma plugin to control it.
 
-> **Status:** work in progress. It runs well on the developer's console, but it has only been tested with a few
-> devices so far. Use at your own risk.
-
-*Deutsche Anleitung weiter unten.*
+> **Status:** Work in progress. BTAudio has been tested on a single console with a small number of devices.
 
 ## Features
-- System-wide sound on Bluetooth headphones and speakers: Wii U Menu, HOME Menu, games, homebrew
-- Pair, connect and disconnect in the Aroma plugin menu, devices are remembered
-- Button combo to connect / disconnect without opening the menu (default: hold **L + R + Minus** for a second)
-- Volume, sound source (GamePad / TV / automatic)
-- Audio quality (High / Medium / Stable): less data means fewer dropouts at a distance
+- System-wide audio: Wii U Menu, HOME Menu, games and homebrew
+- Pairing, connecting and disconnecting from the Aroma plugin menu; paired devices are saved
+- Button combo to connect or disconnect without opening the menu (default: hold L + R + Minus for one second)
+- Volume control and choice of sound source (GamePad, TV or automatic)
+- Three audio quality levels; lower quality reduces dropouts at longer range
 - Optional low latency mode
-- On-screen notifications ("Connected to ...", "Disconnected")
-- Headphone battery level in the menu (experimental, see below)
-- Detects when a Bloopair update replaced the BTAudio module and restores it on request
-- Menu in all 12 languages of the Wii U, following the console's language
-- Bloopair's controller support keeps working, also while audio is playing
+- On-screen notifications for connection changes and low headphone battery
+- Headphone battery level in the menu (experimental)
+- Detection and restore of the BTAudio module after a Bloopair update
+- Menu available in all 12 system languages
+- Full Bloopair controller support, also while audio is playing
 
-Tested with CMF Buds 2 and JBL Charge 5 (SBC codec).
+Tested devices: CMF Buds 2, JBL Charge 5.
+
+## Requirements
+- Wii U on firmware 5.5.5
+- [Aroma](https://wiiu.hacks.guide/)
 
 ## Installation
 1. Download the latest `BTAudio_vX.Y.Z.zip` from the releases page.
-2. Copy the `wiiu` folder from the zip to the root of your SD card and allow it to overwrite files.
-   This places:
-   - `wiiu/environments/aroma/modules/setup/30_bloopair.rpx` (**replaces an installed Bloopair**, controllers keep working)
-   - `wiiu/environments/aroma/plugins/BTAudio.wps`
-   - `wiiu/btaudio/module/30_bloopair.rpx` (backup of the module, used by "Restore BTAudio module")
-   - `wiiu/apps/Koopair/Koopair.wuhb` (Bloopair's companion app)
-3. Turn the console fully off and on again.
+2. Extract the `wiiu` folder to the root of the SD card and overwrite existing files. The archive contains:
 
-Requires [Aroma](https://wiiu.hacks.guide/) and Wii U firmware 5.5.5.
+   | File | Purpose |
+   |---|---|
+   | `wiiu/environments/aroma/modules/setup/30_bloopair.rpx` | BTAudio module; replaces an installed Bloopair |
+   | `wiiu/environments/aroma/plugins/BTAudio.wps` | Plugin |
+   | `wiiu/btaudio/module/30_bloopair.rpx` | Backup of the module, used for restoring it |
+   | `wiiu/apps/Koopair/Koopair.wuhb` | Bloopair's companion app |
+
+3. Turn the console off completely and on again.
 
 ## Usage
-Open the Aroma plugin menu (default: **L + D-Pad Down + Minus** on the GamePad) and select **Bluetooth audio**.
-Entries that do something at once (connect, disconnect, search, remove, reset) are triggered with **A**.
+Open the Aroma plugin menu (L + D-Pad Down + Minus on the GamePad) and select **Bluetooth audio**.
+Actions such as connecting, searching or removing a device are confirmed with **A**.
 
-**Pairing a new device**
-1. "Pair new device": put the headphones in pairing mode.
-2. "2. Search": press A.
-3. Close the menu, wait about 20 seconds, open it again.
-4. "4. Pair": pick your device.
+### Pairing a device
+1. Select **Pair new device** and put the headphones into pairing mode.
+2. Select **Start search** and press A.
+3. Close the menu and wait about 20 seconds.
+4. Reopen the menu, select **Pair** and choose the device.
 
-**Next time:** "Connect to: <device>" with A, or hold **L + R + Minus**.
+Saved devices are listed in the main menu and can be connected with **Connect to: \<device\>** or the button combo.
 
-**Settings**
-- Sound source, audio quality (default Medium), low latency, button combo, language
-- "Show headphone battery (test)": see below
-- "Remove: <device>" forgets one device, "Reset plugin" deletes all devices and settings
-- "Log": off by default. For finding problems the plugin can write `wiiu/btaudio/plugin.txt` on the SD card,
-  with a choice of topics.
+### Settings
+| Setting | Description |
+|---|---|
+| Sound source | GamePad, TV or automatic |
+| Audio quality | High, Medium (default) or Stable |
+| Low latency | Smaller audio buffer; may cause dropouts on weak connections |
+| Show headphone battery (test) | Experimental, see below |
+| Button combo | Combo for connecting and disconnecting |
+| Language | Menu language; follows the system language by default |
+| Remove | Removes a single saved device |
+| Reset plugin | Removes all devices and restores the default settings |
+| Log | Writes diagnostic output to `wiiu/btaudio/plugin.txt`; disabled by default |
 
 ## Battery level (experimental)
-Headphones report their battery to a phone inside the hands-free profile (HFP). The console's Bluetooth stack has
-no usable RFCOMM interface for applications, so BTAudio brings a small RFCOMM client and answers the hands-free
-commands like a phone (without calls). When the switch is on and the headphones report a level, the status shows it,
-for example "Connected: CMF Buds 2 (80 %)". If it does not work with a device, nothing else is affected.
+Headphones report their battery level through the Hands-Free Profile (HFP). The Wii U's Bluetooth stack does not
+expose a usable RFCOMM interface, so BTAudio implements a minimal RFCOMM client and responds to the headset's HFP
+commands as an audio gateway, without call support. When enabled, the reported level is shown next to the device
+name, for example `Connected: CMF Buds 2 (80 %)`. Devices that do not report a level are not otherwise affected.
 
 ## Known limitations
-- New controllers cannot be paired (SYNC) while audio is playing: the search would interrupt the sound. Pair the
-  controller first, then connect the headphones. Already paired controllers connect normally.
-- Latency: mostly caused by the headphones' own buffer (SBC), noticeable in games. Low latency mode helps a bit.
-- Only the SBC codec.
-- Only Wii U firmware 5.5.5 (the IOS-PAD addresses are fixed).
-- An update of Bloopair (Homebrew App Store, Aroma Updater) replaces the BTAudio module. The plugin notices it and
-  offers "Restore BTAudio module" in its menu, then restart the console.
-- If the console ever crashes while connecting to saved headphones, remove the device and pair it again.
+- New controllers cannot be paired while audio is playing, because the device search interrupts the stream.
+  Pair the controller first and connect the headphones afterwards. Previously paired controllers are not affected.
+- Most of the latency comes from the headphones' SBC buffer. Low latency mode reduces it slightly.
+- SBC is the only supported codec.
+- Only firmware 5.5.5 is supported, as the IOS-PAD addresses are fixed.
+- Updating Bloopair (Homebrew App Store, Aroma Updater) replaces the BTAudio module. The plugin detects this and
+  offers **Restore BTAudio module** in its menu. Restart the console afterwards.
+- If the console crashes while connecting to a saved device, remove the device and pair it again.
 
 ## Building
-The easiest way is the container in `tools/build`:
+Build with the container in `tools/build`:
 ```
 docker build -t btaudio-build tools/build
 docker run --rm -u $(id -u):$(id -g) -v "$PWD":/work -w /work btaudio-build make dist
 ```
-(Podman works the same, add `:Z` to the volume on SELinux systems.)
-The result is in `dist/` (`dist/sd` has the SD card layout, plus a zip).
+Podman works the same way; on SELinux systems, add `:Z` to the volume option.
+The output is written to `dist/`: `dist/sd` contains the SD card layout, alongside a release archive.
 
-## Credits and license
-- [Bloopair](https://github.com/GaryOderNichts/Bloopair) by GaryOderNichts: the base of the IOS-PAD patches, the
-  loader and Koopair.
-- libsbc 2.0 from BlueZ (LGPL 2.1, see `third_party/libsbc/COPYING.LIB`): SBC encoder.
-- [Aroma / WUPS](https://github.com/wiiu-env): plugin system, notifications, button combos.
+## Credits
+- [Bloopair](https://github.com/GaryOderNichts/Bloopair) by GaryOderNichts: IOS-PAD patching, loader and Koopair
+- [libsbc](https://git.kernel.org/pub/scm/bluetooth/sbc.git) 2.0 from BlueZ (LGPL-2.1, see `third_party/libsbc/COPYING.LIB`): SBC encoder
+- [wiiu-env](https://github.com/wiiu-env): Aroma, WUPS, notifications and button combo modules
 
-Licensed under the GNU General Public License v2 or later, see `LICENSE`.
-
----
-
-## Deutsch
-
-BTAudio schickt den Ton der Wii U an Bluetooth-Kopfhörer und -Lautsprecher. Es basiert auf Bloopair und enthält
-dessen Controller-Unterstützung.
-
-> **Stand:** in Arbeit. Läuft auf der Konsole des Entwicklers gut, ist aber erst mit wenigen Geräten getestet.
-
-**Installation:** Den Ordner `wiiu` aus dem Zip ins Hauptverzeichnis der SD-Karte kopieren und überschreiben.
-Ein vorhandenes Bloopair wird dabei ersetzt, Controller funktionieren weiter. Konsole ganz aus- und wieder einschalten.
-Voraussetzung: Aroma und Firmware 5.5.5.
-
-**Benutzung:** Aroma-Plugin-Menü öffnen (**L + Steuerkreuz unten + Minus**) → **Bluetooth-Audio**.
-Einträge, die sofort etwas tun, löst du mit **A** aus.
-- Koppeln: "Neues Gerät koppeln" → Kopfhörer in den Kopplungsmodus → "2. Suchen" mit A → Menü schließen, etwa
-  20 Sekunden warten, wieder öffnen → "4. Koppeln" → Gerät wählen.
-- Danach: "Verbinden mit: <Gerät>" mit A, oder **L + R + Minus** eine Sekunde halten.
-- Einstellungen: Tonquelle, Audioqualität, geringe Verzögerung, Tastenkürzel, Sprache, Akkustand (Test),
-  einzelne Geräte entfernen, Plugin zurücksetzen, Log (standardmäßig aus).
-
-**Einschränkungen:**
-- Neue Controller nicht koppeln, während Ton läuft: erst den Controller koppeln, dann die Kopfhörer verbinden.
-- Nur der Codec SBC und nur Firmware 5.5.5.
-- Ein Bloopair-Update (App Store, Aroma Updater) ersetzt das BTAudio-Modul. Das Plugin meldet das und bietet im Menü
-  "BTAudio-Modul wiederherstellen" an, danach die Konsole neu starten.
-- Stürzt die Konsole beim Verbinden mit gespeicherten Kopfhörern ab: das Gerät entfernen und neu koppeln.
+## License
+GNU General Public License v2 or later. See `LICENSE`.
