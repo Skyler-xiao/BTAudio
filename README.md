@@ -37,7 +37,7 @@ Tested devices: CMF Buds 2, JBL Charge 5.
    | `wiiu/btaudio/module/30_bloopair.rpx` | Backup of the module, used for restoring it |
    | `wiiu/apps/Koopair/Koopair.wuhb` | Bloopair's companion app |
 
-3. Turn the console off completely and on again.
+3. Restart the console.
 
 ## Usage
 Open the Aroma plugin menu (L + D-Pad Down + Minus on the GamePad) and select **Bluetooth audio**.
