@@ -190,6 +190,11 @@ const char *const sTable[MSG_COUNT][LANG_COUNT] = {
      "O Bloopair foi substituído (atualização?), o áudio está desligado. Restaure-o no menu do plugin",
      "Bloopair был заменён (обновление?), звук выключен. Восстановите его в меню плагина",
      "Bloopair已被替換（更新？），音訊已關閉。請在外掛程式選單中恢復"},
+    // N_BATTERY_LOW
+    {"ヘッドホンのバッテリー残量が少なくなっています: %d %%", "Headphone battery low: %d %%", "Batterie du casque faible : %d %%",
+     "Akku der Kopfhörer fast leer: %d %%", "Batteria delle cuffie scarica: %d %%", "Batería de los auriculares baja: %d %%",
+     "耳机电量低：%d %%", "헤드폰 배터리 부족: %d %%", "Batterij van de koptelefoon bijna leeg: %d %%",
+     "Bateria dos auscultadores fraca: %d %%", "Низкий заряд наушников: %d %%", "耳機電量低：%d %%"},
     // M_TITLE
     {"Bluetoothオーディオ", "Bluetooth audio", "Audio Bluetooth", "Bluetooth-Audio", "Audio Bluetooth", "Audio Bluetooth",
      "蓝牙音频", "블루투스 오디오", "Bluetooth-audio", "Áudio Bluetooth", "Bluetooth-аудио", "藍牙音訊"},

@@ -65,6 +65,7 @@ enum Msg {
     N_PAIR_FAILED,
     N_CONNECT_FAILED,
     N_MODULE_REPLACED,
+    N_BATTERY_LOW,
 
     // menu
     M_TITLE,
