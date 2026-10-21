@@ -53,9 +53,9 @@ void setVolume(int percent);
 int source(); // capture::SOURCE_*
 void setSource(int value);
 
-// sound quality against robustness of the radio link, used from the next connection on
+// sound quality against robustness of the radio link; a change reconnects when the menu closes
 enum Quality { QUALITY_HIGH = 0, QUALITY_MEDIUM, QUALITY_STABLE };
-bool battery(); // read the headphones' battery over the hands-free profile, used from the next connection on
+bool battery(); // read the device's battery over the hands-free profile; a change reconnects when the menu closes
 void setBattery(bool value);
 bool lowLatency(); // smaller buffers: less delay, more risk of dropouts
 void setLowLatency(bool value);
@@ -69,6 +69,8 @@ void cmdPair(size_t foundIndex);
 void cmdDisconnect();
 void cmdToggle(); // button combo: connect to the last device or disconnect
 void cmdReset();
+// the menu was closed: reconnect if a setting of the running connection changed
+void menuClosed();
 
 // the Bluetooth module is missing or was replaced by Bloopair without audio (an update)
 bool moduleMissing();

@@ -35,7 +35,7 @@ namespace {
 constexpr size_t THREAD_STACK_SIZE = 0x8000;
 constexpr uint32_t MAX_PENDING_FRAMES = 8; // more only adds delay, the IOS side has its own queue
 
-enum class CmdType { Scan, Connect, Pair, Disconnect, Reset, Toggle };
+enum class CmdType { Scan, Connect, Pair, Disconnect, Reset, Toggle, Reconnect };
 struct Cmd {
     CmdType type;
     size_t index;
@@ -53,6 +53,8 @@ bool sBattery    = false;        // read the battery over the hands-free profile
 volatile int sBatteryPercent = -1; // last reported level, -1 = not known
 bool sLowBatteryNotified = false;  // once until it was charged again
 uint8_t sLastAddr[6] = {}; // device of the last connection, for the button combo
+int sUsedQuality  = -1;     // settings the running connection was made with
+bool sUsedBattery = false;
 std::vector<SavedDevice> sSaved;
 std::vector<FoundDevice> sFound;
 std::vector<Cmd> sCmds;
@@ -411,6 +413,7 @@ struct Worker {
     uint8_t lastHfpState = 0;
     uint8_t lastBattery  = 0xFF;
     OSTime lastCongestionLog = 0;
+    bool reconnect = false;       // connect again as soon as the old connection is closed
 };
 
 bool isBusy(uint8_t state) {
@@ -418,6 +421,24 @@ bool isBusy(uint8_t state) {
            state == BLOOPAIR_AUDIO_STATE_CONFIGURING || state == BLOOPAIR_AUDIO_STATE_OPEN ||
            state == BLOOPAIR_AUDIO_STATE_STREAMING;
 }
+
+// the device of the last connection, or the first saved one
+bool lastDevice(SavedDevice &dev) {
+    Lock l;
+    for (const auto &d : sSaved) {
+        if (memcmp(d.addr, sLastAddr, 6) == 0) {
+            dev = d;
+            return true;
+        }
+    }
+    if (!sSaved.empty()) {
+        dev = sSaved[0];
+        return true;
+    }
+    return false;
+}
+
+void startConnect(Worker &w, const SavedDevice &dev, bool pair);
 
 void poll(Worker &w) {
     if (OSGetTime() < w.ignoreUntil) {
@@ -561,9 +582,18 @@ void poll(Worker &w) {
                 w.pairing = false;
                 break;
             case BLOOPAIR_AUDIO_STATE_CLOSED:
+                w.connecting = false;
+                if (w.reconnect) {
+                    // new settings: connect again without "disconnected" / "connected" notifications
+                    w.reconnect = false;
+                    SavedDevice dev;
+                    if (lastDevice(dev)) {
+                        startConnect(w, dev, false);
+                        break;
+                    }
+                }
                 setStatus(i18n::S_DISCONNECTED);
                 notifyState(w.st.state, name, w.pairing);
-                w.connecting = false;
                 break;
             case BLOOPAIR_AUDIO_STATE_IDLE:
                 break;
@@ -658,6 +688,8 @@ void startConnect(Worker &w, const SavedDevice &dev, bool pair) {
         sCurrentName = dev.name;
         memcpy(sLastAddr, dev.addr, 6);
     }
+    sUsedQuality = sQuality;
+    sUsedBattery = sBattery;
     w.target     = dev;
     w.hasTarget  = true;
     w.pairing    = pair;
@@ -750,25 +782,17 @@ void handleCommands(Worker &w) {
                     break;
                 }
                 SavedDevice dev;
-                bool found = false;
-                {
-                    Lock l;
-                    for (const auto &d : sSaved) {
-                        if (memcmp(d.addr, sLastAddr, 6) == 0) {
-                            dev   = d;
-                            found = true;
-                        }
-                    }
-                    if (!found && !sSaved.empty()) {
-                        dev   = sSaved[0];
-                        found = true;
-                    }
-                }
-                if (found) {
+                if (lastDevice(dev)) {
                     startConnect(w, dev, false);
                 }
                 break;
             }
+            case CmdType::Reconnect:
+                if (w.st.state == BLOOPAIR_AUDIO_STATE_STREAMING) {
+                    w.reconnect = true;
+                    Bloopair_AudioDisconnect(w.handle);
+                }
+                break;
             case CmdType::Reset:
                 if (isBusy(w.st.state)) {
                     Bloopair_AudioDisconnect(w.handle);
@@ -1147,6 +1171,13 @@ void setLowLatency(bool value) {
 void cmdReset() {
     logLine(LOG_MENU, "menu: reset plugin");
     queue(CmdType::Reset);
+}
+
+void menuClosed() {
+    if (connected() && sUsedQuality >= 0 && (sQuality != sUsedQuality || sBattery != sUsedBattery)) {
+        logLine(LOG_MENU, "menu: settings changed, reconnecting");
+        queue(CmdType::Reconnect);
+    }
 }
 
 bool logEnabled() {
