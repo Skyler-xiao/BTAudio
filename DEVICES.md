@@ -1,6 +1,8 @@
 # Tested devices
 
-Devices that have been tested with BTAudio. To add a device, see [Contributing](README.md#contributing).
+All devices that have been tested with BTAudio, including devices that do not work. If a device has problems,
+check this list to see whether the problem is known for that device. To add a device, see
+[Contributing](README.md#contributing).
 
 | Symbol | Meaning |
 |---|---|

@@ -84,8 +84,8 @@ name, for example `Connected: CMF Buds 2 (80 %)`. Devices that do not report a l
 Contributions are welcome:
 
 - **Device reports:** Test your headphones or speakers and report the result with the
-  [device report](https://github.com/Skyler-xiao/BTAudio/issues/new?template=device_report.yml) form. Working devices are added to
-  [DEVICES.md](DEVICES.md).
+  [device report](https://github.com/Skyler-xiao/BTAudio/issues/new?template=device_report.yml) form. Every reported device is added to
+  [DEVICES.md](DEVICES.md), including devices that do not work.
 - **Bug reports:** Open an issue with the [bug report](https://github.com/Skyler-xiao/BTAudio/issues/new?template=bug_report.yml) form. Please
   include a log: enable **Settings > Log > Write log** with all topics, reproduce the problem and attach
   `wiiu/btaudio/plugin.txt` from the SD card.
