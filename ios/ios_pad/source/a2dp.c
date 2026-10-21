@@ -256,10 +256,15 @@ void a2dpInit(void)
     }
 }
 
-void a2dpStart(const A2dpParams* p)
+int a2dpStart(const A2dpParams* p)
 {
     if (!btaId || p->frameLength == 0 || p->frameLength > MAX_FRAME_LENGTH || p->samplesPerFrame == 0) {
-        return;
+        return 0;
+    }
+
+    // one packet must hold at least one frame, otherwise nothing could ever be sent
+    if (p->mtu < RTP_HEADER_SIZE + 1 + p->frameLength) {
+        return 0;
     }
 
     a2dpStop();
@@ -286,13 +291,13 @@ void a2dpStart(const A2dpParams* p)
         queueId = IOS_CreateMessageQueue(&queueStorage, 1);
         threadStack = IOS_AllocAligned(LOCAL_PROCESS_HEAP_ID, THREAD_STACK_SIZE, 0x20);
         if (queueId < 0 || !threadStack) {
-            return;
+            return 0;
         }
 
         int thread = IOS_CreateThread(timerThread, NULL, (uint8_t*) threadStack + THREAD_STACK_SIZE,
             THREAD_STACK_SIZE, IOS_GetThreadPriority(0), 0);
         if (thread < 0) {
-            return;
+            return 0;
         }
 
         IOS_StartThread(thread);
@@ -301,6 +306,7 @@ void a2dpStart(const A2dpParams* p)
 
     active = 1;
     timerId = IOS_CreateTimer(TICK_US, TICK_US, queueId, TICK_MESSAGE);
+    return 1;
 }
 
 void a2dpStop(void)

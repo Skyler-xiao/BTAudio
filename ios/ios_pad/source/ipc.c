@@ -81,7 +81,7 @@ static int bloopairFunc(BtrmRequest* request, BtrmResponse* response)
     
         BloopairControllerRequestData* req = (BloopairControllerRequestData*) request->data;
         BloopairControllerInformationData* resp = (BloopairControllerInformationData*) response->data;
-        if (req->handle > BTA_HH_MAX_KNOWN) {
+        if (req->handle >= BTA_HH_MAX_KNOWN) {
             return -4;
         }
 
@@ -101,7 +101,7 @@ static int bloopairFunc(BtrmRequest* request, BtrmResponse* response)
         DEBUG_PRINT("BLOOPAIR_FUNC_READ_RAW_REPORT\n");
 
         BloopairControllerRequestData* req = (BloopairControllerRequestData*) request->data;
-        if (req->handle > BTA_HH_MAX_KNOWN) {
+        if (req->handle >= BTA_HH_MAX_KNOWN) {
             return -4;
         }
 
@@ -243,7 +243,7 @@ static int bloopairFunc(BtrmRequest* request, BtrmResponse* response)
             configuration = Configuration_GetCommon(data->controllerType, NULL);
         } else {
             // use handle
-            if (data->handle > BTA_HH_MAX_KNOWN) {
+            if (data->handle >= BTA_HH_MAX_KNOWN) {
                 return -4;
             }
 
@@ -273,7 +273,7 @@ static int bloopairFunc(BtrmRequest* request, BtrmResponse* response)
             mapping = Configuration_GetMapping(data->controllerType, NULL);
         } else {
             // use handle
-            if (data->handle > BTA_HH_MAX_KNOWN) {
+            if (data->handle >= BTA_HH_MAX_KNOWN) {
                 return -4;
             }
 
@@ -304,7 +304,7 @@ static int bloopairFunc(BtrmRequest* request, BtrmResponse* response)
             customConfiguration = Configuration_GetCustom(data->controllerType, NULL, &customSize);
         } else {
             // use handle
-            if (data->handle > BTA_HH_MAX_KNOWN) {
+            if (data->handle >= BTA_HH_MAX_KNOWN) {
                 return -4;
             }
 
