@@ -51,6 +51,7 @@ int sQuality  = btmgr::QUALITY_MEDIUM;
 bool sLowLatency = false;
 bool sBattery    = false;        // read the battery over the hands-free profile (test feature)
 volatile int sBatteryPercent = -1; // last reported level, -1 = not known
+bool sLowBatteryNotified = false;  // once until it was charged again
 uint8_t sLastAddr[6] = {}; // device of the last connection, for the button combo
 std::vector<SavedDevice> sSaved;
 std::vector<FoundDevice> sFound;
@@ -503,6 +504,12 @@ void poll(Worker &w) {
     if (w.st.battery != w.lastBattery) {
         if (w.st.battery != 0xFF) {
             logLine(btmgr::LOG_CONNECTION, "battery %u %%", (unsigned) w.st.battery);
+            if (w.st.battery <= 20 && !sLowBatteryNotified) {
+                sLowBatteryNotified = true;
+                notify(i18n::format(i18n::N_BATTERY_LOW, (int) w.st.battery), true);
+            } else if (w.st.battery >= 40) {
+                sLowBatteryNotified = false;
+            }
         }
         w.lastBattery = w.st.battery;
     }
