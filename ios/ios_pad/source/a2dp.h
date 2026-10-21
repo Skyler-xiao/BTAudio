@@ -25,7 +25,8 @@ typedef struct {
 void a2dpInit(void);
 
 // start / stop sending queued frames (stack context)
-void a2dpStart(const A2dpParams* params);
+// returns 0 if the stream can not run with these parameters
+int a2dpStart(const A2dpParams* params);
 void a2dpStop(void);
 
 // queue whole SBC frames, returns how many were taken (IPC thread)

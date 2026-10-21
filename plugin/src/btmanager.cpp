@@ -300,8 +300,10 @@ public:
         float target = (float) volumePercent / 100.0f;
         target       = target * target;
 
-        std::vector<int16_t> pcm(mSamplesPerFrame * 2);
-        std::vector<uint8_t> out(mFrameLength + 16);
+        std::vector<int16_t> &pcm = mPcm;
+        std::vector<uint8_t> &out = mOut;
+        pcm.resize(mSamplesPerFrame * 2);
+        out.resize(mFrameLength + 16);
 
         uint32_t maxPending = small ? MAX_PENDING_FRAMES / 2 : MAX_PENDING_FRAMES;
         while (mPending.size() < maxPending * mFrameLength) {
@@ -382,6 +384,8 @@ private:
     float mGain = 0.0f;
     std::vector<int16_t> mFifo;
     std::vector<uint8_t> mPending;
+    std::vector<int16_t> mPcm;
+    std::vector<uint8_t> mOut;
 };
 
 // ------------------------------------------------------------------------------------------
@@ -835,11 +839,13 @@ int threadMain(int, const char **) {
             }
         }
 
+        // without a connection the thread only waits for menu commands: ask the module less often and sleep longer
+        bool busy = w.active && (w.streamer.running || w.connecting || isBusy(w.st.state));
         if (w.active) {
             handleCommands(w);
 
             OSTime now = OSGetTime();
-            if (OSTicksToMilliseconds(now - w.lastPoll) >= 100) {
+            if (OSTicksToMilliseconds(now - w.lastPoll) >= (busy ? 100 : 500)) {
                 w.lastPoll = now;
                 poll(w);
             }
@@ -854,7 +860,7 @@ int threadMain(int, const char **) {
             }
         }
         flushLog(w.connecting);
-        OSSleepTicks(OSMillisecondsToTicks(4));
+        OSSleepTicks(OSMillisecondsToTicks(busy ? 4 : 20));
     }
 
     capture::setActive(false);

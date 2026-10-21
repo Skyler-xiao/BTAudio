@@ -614,9 +614,12 @@ static void handleSignal(const uint8_t* d, uint16_t len)
         params.sampleRate = sampleRate;
 
         status.mediaMtu = mediaMtu;
-        status.state = BLOOPAIR_AUDIO_STATE_STREAMING;
-        a2dpStart(&params);
         logEvent(BLOOPAIR_AUDIO_EV_AVDTP_INFO, 5, mediaMtu);
+        if (!a2dpStart(&params)) {
+            fail();     // for example a media channel too small for one SBC frame
+            break;
+        }
+        status.state = BLOOPAIR_AUDIO_STATE_STREAMING;
 
         // the sound runs: now the battery level, if the user wants it (a failure there changes nothing here).
         // The connection used most of the event log, the PPC side has read it by now: start a fresh one.
