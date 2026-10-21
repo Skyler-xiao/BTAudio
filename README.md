@@ -14,10 +14,10 @@ its controller support. It adds audio streaming to the Bluetooth stack and an Ar
 - Volume control and choice of sound source (GamePad, TV or automatic)
 - Three audio quality levels; lower quality reduces dropouts at longer range
 - Optional low latency mode
-- On-screen notifications for connection changes and low headphone battery
-- Headphone battery level in the menu (experimental)
+- On-screen notifications for connection changes and low device battery
+- Battery level of the connected device in the menu (experimental)
 - Detection and restore of the BTAudio module after a Bloopair update
-- Menu available in all 12 system languages
+- Menu available in all 12 system languages (see [Languages](#languages))
 - Full Bloopair controller support, also while audio is playing
 
 See [DEVICES.md](DEVICES.md) for a list of tested headphones and speakers.
@@ -55,9 +55,9 @@ Saved devices are listed in the main menu and can be connected with **Connect to
 | Setting | Description |
 |---|---|
 | Sound source | GamePad, TV or automatic |
-| Audio quality | High, Medium (default) or Stable |
+| Audio quality | High, Medium (default) or Stable; a running connection reconnects when the menu is closed |
 | Low latency | Smaller audio buffer; may cause dropouts on weak connections |
-| Show headphone battery (test) | Experimental, see below |
+| Show device battery (test) | Experimental, see below |
 | Button combo | Combo for connecting and disconnecting |
 | Language | Menu language; follows the system language by default |
 | Remove | Removes a single saved device |
@@ -65,10 +65,15 @@ Saved devices are listed in the main menu and can be connected with **Connect to
 | Log | Writes diagnostic output to `wiiu/btaudio/plugin.txt`; disabled by default |
 
 ## Battery level (experimental)
-Headphones report their battery level through the Hands-Free Profile (HFP). The Wii U's Bluetooth stack does not
+Headphones and speakers report their battery level through the Hands-Free Profile (HFP). The Wii U's Bluetooth stack does not
 expose a usable RFCOMM interface, so BTAudio implements a minimal RFCOMM client and responds to the headset's HFP
-commands as an audio gateway, without call support. When enabled, the reported level is shown next to the device
+commands as an audio gateway, without call support. Speakers without a microphone usually do not offer HFP. When enabled, the reported level is shown next to the device
 name, for example `Connected: CMF Buds 2 (80 %)`. Devices that do not report a level are not otherwise affected.
+
+## Languages
+The menu follows the console's language. English and German are maintained by the developer; the other ten
+languages were translated without a native speaker. If you find a wrong or unclear text in your language, please
+open an issue or a pull request with a better translation (all texts are in `plugin/src/i18n.cpp`).
 
 ## Known limitations
 - New controllers cannot be paired while audio is playing, because the device search interrupts the stream.

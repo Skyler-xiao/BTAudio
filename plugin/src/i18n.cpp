@@ -191,10 +191,10 @@ const char *const sTable[MSG_COUNT][LANG_COUNT] = {
      "Bloopair был заменён (обновление?), звук выключен. Восстановите его в меню плагина",
      "Bloopair已被替換（更新？），音訊已關閉。請在外掛程式選單中恢復"},
     // N_BATTERY_LOW
-    {"ヘッドホンのバッテリー残量が少なくなっています: %d %%", "Headphone battery low: %d %%", "Batterie du casque faible : %d %%",
-     "Akku der Kopfhörer fast leer: %d %%", "Batteria delle cuffie scarica: %d %%", "Batería de los auriculares baja: %d %%",
-     "耳机电量低：%d %%", "헤드폰 배터리 부족: %d %%", "Batterij van de koptelefoon bijna leeg: %d %%",
-     "Bateria dos auscultadores fraca: %d %%", "Низкий заряд наушников: %d %%", "耳機電量低：%d %%"},
+    {"デバイスのバッテリー残量が少なくなっています: %d %%", "Device battery low: %d %%", "Batterie de l'appareil faible : %d %%",
+     "Akku des Geräts fast leer: %d %%", "Batteria del dispositivo scarica: %d %%", "Batería del dispositivo baja: %d %%",
+     "设备电量低：%d %%", "기기 배터리 부족: %d %%", "Batterij van het apparaat bijna leeg: %d %%",
+     "Bateria do dispositivo fraca: %d %%", "Низкий заряд устройства: %d %%", "裝置電量低：%d %%"},
     // M_TITLE
     {"Bluetoothオーディオ", "Bluetooth audio", "Audio Bluetooth", "Bluetooth-Audio", "Audio Bluetooth", "Audio Bluetooth",
      "蓝牙音频", "블루투스 오디오", "Bluetooth-audio", "Áudio Bluetooth", "Bluetooth-аудио", "藍牙音訊"},
@@ -285,10 +285,10 @@ const char *const sTable[MSG_COUNT][LANG_COUNT] = {
      "Ripristina modulo BTAudio", "Restaurar módulo BTAudio", "恢复BTAudio模块", "BTAudio 모듈 복원",
      "BTAudio-module herstellen", "Restaurar módulo BTAudio", "Восстановить модуль BTAudio", "恢復BTAudio模組"},
     // M_BATTERY
-    {"ヘッドホンのバッテリー残量を表示（テスト）", "Show headphone battery (test)", "Afficher la batterie du casque (test)",
-     "Akkustand der Kopfhörer anzeigen (Test)", "Mostra batteria delle cuffie (test)", "Mostrar batería de los auriculares (prueba)",
-     "显示耳机电量（测试）", "헤드폰 배터리 표시 (테스트)", "Batterij van de koptelefoon tonen (test)",
-     "Mostrar bateria dos auscultadores (teste)", "Показывать заряд наушников (тест)", "顯示耳機電量（測試）"},
+    {"デバイスのバッテリー残量を表示（テスト）", "Show device battery (test)", "Afficher la batterie de l'appareil (test)",
+     "Akkustand des Geräts anzeigen (Test)", "Mostra batteria del dispositivo (test)", "Mostrar batería del dispositivo (prueba)",
+     "显示设备电量（测试）", "기기 배터리 표시 (테스트)", "Batterij van het apparaat tonen (test)",
+     "Mostrar bateria do dispositivo (teste)", "Показывать заряд устройства (тест)", "顯示裝置電量（測試）"},
     // M_LANGUAGE
     {"言語", "Language", "Langue", "Sprache", "Lingua", "Idioma", "语言", "언어", "Taal", "Idioma", "Язык", "語言"},
     // M_CAT_LOG
@@ -327,11 +327,8 @@ const char *const sTable[MSG_COUNT][LANG_COUNT] = {
      "파일: SD:/wiiu/btaudio/plugin.txt", "Bestand: SD:/wiiu/btaudio/plugin.txt",
      "Ficheiro: SD:/wiiu/btaudio/plugin.txt", "Файл: SD:/wiiu/btaudio/plugin.txt", "檔案：SD:/wiiu/btaudio/plugin.txt"},
     // M_QUALITY
-    {"音質（次の接続から）", "Audio quality (from next connection)", "Qualité audio (à la prochaine connexion)",
-     "Audioqualität (ab nächster Verbindung)", "Qualità audio (dalla prossima connessione)",
-     "Calidad de audio (desde la próxima conexión)", "音质（下次连接时生效）", "음질 (다음 연결부터)",
-     "Audiokwaliteit (vanaf volgende verbinding)", "Qualidade de áudio (a partir da próxima ligação)",
-     "Качество звука (со следующего подключения)", "音質（下次連線時生效）"},
+    {"音質", "Audio quality", "Qualité audio", "Audioqualität", "Qualità audio", "Calidad de audio", "音质", "음질",
+     "Audiokwaliteit", "Qualidade de áudio", "Качество звука", "音質"},
     // M_Q_HIGH
     {"高", "High", "Haute", "Hoch", "Alta", "Alta", "高", "높음", "Hoog", "Alta", "Высокое", "高"},
     // M_Q_MEDIUM

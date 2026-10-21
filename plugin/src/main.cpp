@@ -338,6 +338,7 @@ WUPSConfigAPICallbackStatus menuOpened(WUPSConfigCategoryHandle rootHandle) {
 
 void menuClosed() {
     WUPSStorageAPI::SaveStorage();
+    btmgr::menuClosed();
 }
 
 } // namespace
