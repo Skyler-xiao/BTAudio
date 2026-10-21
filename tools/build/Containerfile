@@ -1,0 +1,11 @@
+# Build environment for BTAudio: devkitPPC + wut, devkitARM (IOS parts), libwups and libnotifications (plugin)
+FROM ghcr.io/wiiu-env/devkitppc:20260225
+RUN apt-get update >/dev/null 2>&1; apt-get install -y git zip >/dev/null 2>&1 || true
+RUN dkp-pacman -Syu --noconfirm --needed devkitARM general-tools >/dev/null 2>&1 || dkp-pacman -S --noconfirm devkitARM general-tools
+# libwups (pinned commit)
+RUN git clone https://github.com/wiiu-env/WiiUPluginSystem /tmp/wups && cd /tmp/wups && git checkout 0e26d9fd2d9db6c356c973a1a79000757802d883 \
+ && make -j4 && mkdir -p $DEVKITPRO/wups && cp -r lib include share $DEVKITPRO/wups/ && rm -rf /tmp/wups
+# libnotifications (on-screen messages through Aroma's NotificationModule), pinned commit
+RUN git clone https://github.com/wiiu-env/libnotifications /tmp/notif && cd /tmp/notif && git checkout c7fc69e2f7a265fee017c87fe066b587c9e5003d \
+ && make -j4 && make install && rm -rf /tmp/notif
+ENV DEVKITARM=/opt/devkitpro/devkitARM

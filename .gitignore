@@ -1,0 +1,18 @@
+.vscode/
+
+**/build/
+
+*.bin
+*.bin.h
+*_syms.h
+*.elf
+*.rpx
+*.wuhb
+*.zip
+*.a
+*.wps
+dist/
+*.map
+
+# the build container definition is source, not output
+!/tools/build/
