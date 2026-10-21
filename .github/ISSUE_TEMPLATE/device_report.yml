@@ -1,0 +1,56 @@
+name: Device report
+description: Report how a Bluetooth device works with BTAudio
+title: "[Device] "
+labels: ["device report"]
+body:
+  - type: input
+    id: device
+    attributes:
+      label: Device
+      description: Manufacturer and model
+      placeholder: CMF Buds 2
+    validations:
+      required: true
+  - type: dropdown
+    id: type
+    attributes:
+      label: Type
+      options:
+        - Headphones
+        - Speaker
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: audio
+    attributes:
+      label: Audio
+      options:
+        - Works
+        - Works with issues
+        - Does not work
+    validations:
+      required: true
+  - type: dropdown
+    id: battery
+    attributes:
+      label: Battery level
+      description: With "Show headphone battery (test)" enabled
+      options:
+        - Shown
+        - Not shown
+        - Not tested
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: BTAudio version
+      placeholder: 0.5.0
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Dropdowns, range, latency or anything else worth mentioning

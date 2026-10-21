@@ -20,7 +20,7 @@ its controller support. It adds audio streaming to the Bluetooth stack and an Ar
 - Menu available in all 12 system languages
 - Full Bloopair controller support, also while audio is playing
 
-Tested devices: CMF Buds 2, JBL Charge 5.
+See [DEVICES.md](DEVICES.md) for a list of tested headphones and speakers.
 
 ## Requirements
 - Wii U on firmware 5.5.5
@@ -79,6 +79,18 @@ name, for example `Connected: CMF Buds 2 (80 %)`. Devices that do not report a l
 - Updating Bloopair (Homebrew App Store, Aroma Updater) replaces the BTAudio module. The plugin detects this and
   offers **Restore BTAudio module** in its menu. Restart the console afterwards.
 - If the console crashes while connecting to a saved device, remove the device and pair it again.
+
+## Contributing
+Contributions are welcome:
+
+- **Device reports:** Test your headphones or speakers and report the result with the
+  [device report](https://github.com/Skyler-xiao/BTAudio/issues/new?template=device_report.yml) form. Working devices are added to
+  [DEVICES.md](DEVICES.md).
+- **Bug reports:** Open an issue with the [bug report](https://github.com/Skyler-xiao/BTAudio/issues/new?template=bug_report.yml) form. Please
+  include a log: enable **Settings > Log > Write log** with all topics, reproduce the problem and attach
+  `wiiu/btaudio/plugin.txt` from the SD card.
+- **Pull requests:** Fixes and improvements are welcome. For larger changes, please open an issue first to discuss
+  the approach.
 
 ## Building
 Build with the container in `tools/build`:
