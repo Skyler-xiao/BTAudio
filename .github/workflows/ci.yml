@@ -2,7 +2,15 @@ name: CI
 
 on:
   push:
+    paths-ignore:
+      - '**.md'
+      - '.github/ISSUE_TEMPLATE/**'
+      - 'LICENSE'
   pull_request:
+    paths-ignore:
+      - '**.md'
+      - '.github/ISSUE_TEMPLATE/**'
+      - 'LICENSE'
   workflow_dispatch:
 
 jobs:
