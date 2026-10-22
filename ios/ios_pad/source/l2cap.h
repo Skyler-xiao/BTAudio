@@ -15,6 +15,10 @@
 // functions of the Bluetooth stack in IOS-PAD (addresses in imports.sym)
 extern uint16_t L2CA_Register(uint16_t psm, const void* p_cb_info);
 extern uint16_t L2CA_ConnectReq(uint16_t psm, uint8_t* p_bd_addr);
+// answer to an incoming connection (found by its trace text, wraps L2CA_ErtmConnectRsp)
+extern uint8_t L2CA_ConnectRsp(uint8_t* p_bd_addr, uint8_t id, uint16_t lcid, uint16_t result, uint16_t status);
+
+#define L2CAP_CONN_NO_RESOURCES 4
 extern uint8_t L2CA_ConfigReq(uint16_t cid, void* p_cfg);
 extern uint8_t L2CA_ConfigRsp(uint16_t cid, void* p_cfg);
 extern uint8_t L2CA_DataWrite(uint16_t cid, BT_HDR* p_data);

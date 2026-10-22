@@ -645,8 +645,9 @@ static void handleSignal(const uint8_t* d, uint16_t len)
 // ---------------------------------------------------------------------------------------------
 static void cbConnectInd(uint8_t* bd_addr, uint32_t lcid, uint32_t psm, uint32_t id)
 {
-    // we never expect incoming connections, just log them
+    // the console always starts the connection itself: log and refuse what a device starts on its own
     logEvent(BLOOPAIR_AUDIO_EV_CONNECT_IND, psm & 0xFFFF, lcid & 0xFFFF);
+    L2CA_ConnectRsp(bd_addr, id & 0xFF, lcid & 0xFFFF, L2CAP_CONN_NO_RESOURCES, 0);
 }
 
 static void cbConnectCfm(uint32_t lcid, uint32_t result)

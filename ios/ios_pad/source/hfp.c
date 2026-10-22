@@ -525,7 +525,8 @@ static void checkOpen(void)
 
 static void cbConnectInd(uint8_t* bd_addr, uint32_t lcid, uint32_t psm, uint32_t id)
 {
-    // nobody on the console offers RFCOMM services, incoming connections are not answered
+    // nobody on the console offers RFCOMM services: refuse, instead of leaving the device waiting
+    L2CA_ConnectRsp(bd_addr, id & 0xFF, lcid & 0xFFFF, L2CAP_CONN_NO_RESOURCES, 0);
 }
 
 static void cbConnectCfm(uint32_t lcid, uint32_t result)

@@ -16,7 +16,7 @@ check this list to see whether the problem is known for that device. To add a de
 
 | Device | Audio | Battery level | BTAudio version | Notes |
 |---|---|---|---|---|
-| CMF Buds 2 | ✅ | ✅ | 0.5.0 | |
+| CMF Buds 2 | ✅ | ✅ | 1.0.0 | |
 
 ## Speakers
 

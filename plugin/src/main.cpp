@@ -36,7 +36,7 @@
 
 WUPS_PLUGIN_NAME("BTAudio");
 WUPS_PLUGIN_DESCRIPTION("Sends the console sound to Bluetooth headphones");
-WUPS_PLUGIN_VERSION("v0.5");
+WUPS_PLUGIN_VERSION("v1.0");
 WUPS_PLUGIN_AUTHOR("BTAudio, based on Bloopair");
 WUPS_PLUGIN_LICENSE("GPL");
 

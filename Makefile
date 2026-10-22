@@ -13,7 +13,7 @@ ifeq ($(DEBUG), 1)
 	export BLOOPAIR_COMMIT_HASH := $(or $(shell git rev-parse HEAD),"ffffffffffffffffffffffffffffffffffffffff")
 endif
 
-VERSION ?= 0.5.0
+VERSION ?= 1.0.0
 
 .PHONY: all clean dist ios_kernel ios_usb ios_pad libbloopair loader koopair plugin
 
