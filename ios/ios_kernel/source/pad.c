@@ -28,7 +28,7 @@ void run_ios_pad_patches(void)
     ios_map_shared_info_t map_info;
     map_info.paddr = 0x11F86000;
     map_info.vaddr = 0x11F86000;
-    map_info.size = 0x14000;         // Can map up to 0x11FC0000
+    map_info.size = 0x10000;         // Can map up to 0x11FC0000 (0x10000 is what Bloopair maps and has been tested)
     map_info.domain = 6;            // PAD
     map_info.type = 3;              // 0 = undefined, 1 = kernel only, 2 = read only, 3 = read/write
     map_info.cached = 0xFFFFFFFF;
