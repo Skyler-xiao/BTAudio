@@ -399,7 +399,6 @@ struct Worker {
     Streamer streamer;
     BloopairAudioStatus st;
     OSTime lastPoll = 0;
-    OSTime lastLoop = 0;          // diagnostics: end of the previous loop pass
     bool connecting = false;      // we asked for a connection and wait for the result
     OSTime connectStart = 0;
     bool pairing = false;         // the connection includes a pairing, the key must be stored
@@ -866,9 +865,6 @@ int threadMain(int, const char **) {
 
         // without a connection the thread only waits for menu commands: ask the module less often and sleep longer
         bool busy = w.active && (w.streamer.running || w.connecting || isBusy(w.st.state));
-        // diagnostics: find out where the stream stops for seconds around the HOME Menu
-        OSTime tLoop = OSGetTime();
-        OSTime tPoll = 0, tPump = 0;
         if (w.active) {
             handleCommands(w);
 
@@ -876,7 +872,6 @@ int threadMain(int, const char **) {
             if (OSTicksToMilliseconds(now - w.lastPoll) >= (busy ? 100 : 500)) {
                 w.lastPoll = now;
                 poll(w);
-                tPoll = OSGetTime() - now;
             }
 
             if (w.streamer.running) {
@@ -885,22 +880,10 @@ int threadMain(int, const char **) {
                     Lock l;
                     vol = sVolume;
                 }
-                OSTime t = OSGetTime();
                 w.streamer.pump(w.handle, vol);
-                tPump = OSGetTime() - t;
             }
         }
-        OSTime t = OSGetTime();
         flushLog(w.connecting);
-        OSTime tFlush = OSGetTime() - t;
-        uint32_t gap = w.lastLoop ? (uint32_t) OSTicksToMilliseconds(tLoop - w.lastLoop) : 0;
-        if (w.streamer.running && (gap > 150 || OSTicksToMilliseconds(tPoll) > 100 || OSTicksToMilliseconds(tPump) > 100 ||
-                                   OSTicksToMilliseconds(tFlush) > 100)) {
-            logLine(btmgr::LOG_AUDIO, "slow: status %u ms, send %u ms, log %u ms, loop gap %u ms",
-                    (unsigned) OSTicksToMilliseconds(tPoll), (unsigned) OSTicksToMilliseconds(tPump),
-                    (unsigned) OSTicksToMilliseconds(tFlush), (unsigned) gap);
-        }
-        w.lastLoop = OSGetTime();
         OSSleepTicks(OSMillisecondsToTicks(busy ? 4 : 20));
     }
 
