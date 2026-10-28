@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.1.0
+
+### Bloopair
+- Updated to Bloopair 1.1.0: support for Bluetooth Low Energy controllers (Switch 2 Joy-Con, Pro Controller and
+  GameCube Controller, Xbox Series S/X, Xbox One S/X with the latest firmware, Stadia Controller). Controller
+  pairings are now stored on the SD card under `wiiu/bloopair/devices`.
+- BLE controllers have not been tested with BTAudio yet, reports are welcome.
+
+### Devices
+- Fixed: removing a device and pairing it again without restarting the console reused the old key, so the device
+  was not saved and disappeared after disconnecting.
+
+### Plugin
+- The plugin menu names Xiao as the author.
+
+### Known issue
+- Opening or closing the HOME Menu can interrupt the audio for a few seconds (also in 1.0.0).
+
 ## 1.0.0
 
 First release.

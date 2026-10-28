@@ -2,8 +2,8 @@
 
 Bluetooth audio (A2DP) for the Wii U. BTAudio streams the console's sound to Bluetooth headphones and speakers.
 
-BTAudio is based on [Bloopair](https://github.com/GaryOderNichts/Bloopair) by GaryOderNichts and includes all of
-its controller support. It adds audio streaming to the Bluetooth stack and an Aroma plugin to control it.
+BTAudio is based on [Bloopair](https://github.com/GaryOderNichts/Bloopair) 1.1.0 by GaryOderNichts and includes all of
+its controller support, including Bluetooth Low Energy controllers. It adds audio streaming to the Bluetooth stack and an Aroma plugin to control it.
 
 > **Status:** Work in progress. BTAudio has been tested on a single console with a small number of devices. Use at your own Risk.
 
@@ -18,7 +18,8 @@ its controller support. It adds audio streaming to the Bluetooth stack and an Ar
 - Battery level of the connected device in the menu (experimental)
 - Detection and restore of the BTAudio module after a Bloopair update
 - Menu available in all 12 system languages (see [Languages](#languages))
-- Full Bloopair controller support, also while audio is playing
+- Full Bloopair controller support, also while audio is playing, including the Bluetooth Low Energy controllers
+  added in Bloopair 1.1.0 (Switch 2 controllers, Xbox Series S/X, Stadia)
 
 See [DEVICES.md](DEVICES.md) for a list of tested headphones and speakers.
 
@@ -84,6 +85,8 @@ open an issue or a pull request with a better translation (all texts are in `plu
 - Updating Bloopair (Homebrew App Store, Aroma Updater) replaces the BTAudio module. The plugin detects this and
   offers **Restore BTAudio module** in its menu. Restart the console afterwards.
 - If the console crashes while connecting to a saved device, remove the device and pair it again.
+- Opening or closing the HOME Menu can interrupt the audio for a few seconds, because the console pauses the
+  application, and with it the audio sender, while the HOME Menu starts.
 
 ## Contributing
 Contributions are welcome:
