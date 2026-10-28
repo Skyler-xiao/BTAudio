@@ -185,7 +185,7 @@ typedef struct __attribute__ ((__packed__)) {
 #define BLOOPAIR_AUDIO_EV_HFP               41  // value: hands-free state, data: detail
 #define BLOOPAIR_AUDIO_EV_HFP_AT            42  // AT command of the device: value = length, data = first four characters
 #define BLOOPAIR_AUDIO_EV_HFP_FRAME         43  // RFCOMM frame of the device: value = control << 8 | address, data = length
-#define BLOOPAIR_AUDIO_EV_KEY_ADD           40  // value: 0 = stored key handed to the stack, 1 = stack has taken it
+#define BLOOPAIR_AUDIO_EV_KEY_ADD           40  // value: 0 = stored key handed to the stack, 1 = stack has taken it, 2 = old key of the stack dropped before pairing
 #define BLOOPAIR_AUDIO_EV_HCI_DISC_CALL     33  // the stack asks for a disconnect: value = reason, data = address of the caller
 
 // structure associated with BLOOPAIR_FUNC_AUDIO_TEST_ARM

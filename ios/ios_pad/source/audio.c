@@ -17,6 +17,7 @@
 #include "a2dp.h"
 #include "l2cap.h"
 #include "hfp.h"
+#include "stack/btm.h"
 
 #define AVDTP_PSM               0x0019
 #define AVDTP_SEC_SERVICE_ID    35
@@ -824,6 +825,22 @@ static void startBond(void)
     // otherwise wait for the pairing result, see audioOnSecurityEvent
 }
 
+// sec_flags bits of a device record of the security manager
+#define BTM_SEC_LINK_KEY_KNOWN  0x10
+#define BTM_SEC_LINK_KEY_AUTHED 0x20
+
+// Pairing a device again: the security manager may still know the link key of an earlier connection
+// in this session. It would answer the key request with that key, no new key comes out of the pairing
+// and the plugin has nothing to save. Make it pair from scratch.
+static void forgetStackKey(void)
+{
+    tBTM_SEC_DEV_REC* dev = btm_find_dev(status.bd_address);
+    if (dev && (dev->sec_flags & BTM_SEC_LINK_KEY_KNOWN)) {
+        dev->sec_flags &= ~(BTM_SEC_LINK_KEY_KNOWN | BTM_SEC_LINK_KEY_AUTHED);
+        logEvent(BLOOPAIR_AUDIO_EV_KEY_ADD, 2, 0);
+    }
+}
+
 // connect to status.bd_address (pairs on the way if the device is not known yet)
 static void beginConnect(void)
 {
@@ -867,6 +884,7 @@ static void startConnect(void)
     }
 
     memcpy(status.bd_address, addr, 6);
+    forgetStackKey();
     beginConnect();
 }
 
@@ -922,6 +940,7 @@ void audioHandleMessage(uint8_t code)
             BTA_DmAddDevice(status.bd_address, NULL, pendingConnect.linkKey, 0, 0, pendingConnect.keyType, 0);
             a2dpPostMessage(A2DP_MSG_CONNECT2);
         } else {
+            forgetStackKey();
             beginConnect();
         }
         break;
