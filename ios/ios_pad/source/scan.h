@@ -11,6 +11,7 @@
 
 #include <imports.h>
 #include "bt_api.h"
+#include <bta/bta_api.h>
 #include <bloopair/ipc.h>
 
 // enable / disable the scan mode, optionally clearing the result list

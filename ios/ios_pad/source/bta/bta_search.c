@@ -16,6 +16,7 @@
  */
 
 #include <imports.h>
+#include <bta/bta_api.h>
 #include "controllers.h"
 #include "scan.h"
 #include "audio.h"
@@ -29,18 +30,25 @@ void bta_search_callback(uint8_t event, void *p_data)
 
     switch (event) {
     case BTA_DM_INQ_RES_EVT: {
+        tBTA_DM_INQ_RES* res = (tBTA_DM_INQ_RES*) p_data;
+
+        // If this is a BLE device don't do remote name lookup (not implemented)
+        if (res->device_type == BT_DEVICE_TYPE_BLE) {
+            res->remt_name_not_required = 1;
+        }
+
         if (scanIsEnabled()) {
-            const tBTA_DM_INQ_RES* inq = (const tBTA_DM_INQ_RES*) p_data;
-            scanOnInquiryResult(inq);
+            scanOnInquiryResult(res);
 
             // devices other than peripherals are only recorded,
             // the original callback should only ever see controllers
-            if ((inq->dev_class[1] & BTM_COD_MAJOR_CLASS_MASK) != BTM_COD_MAJOR_PERIPHERAL) {
+            if ((res->dev_class[1] & BTM_COD_MAJOR_CLASS_MASK) != BTM_COD_MAJOR_PERIPHERAL) {
                 return;
             }
         }
         break;
     }
+
     case BTA_DM_DISC_RES_EVT: {
         tBTA_DM_DISC_RES* res = (tBTA_DM_DISC_RES*) p_data;
 
@@ -54,7 +62,8 @@ void bta_search_callback(uint8_t event, void *p_data)
         }
 
         if (res->result == 0 && !isOfficialName((const char*) res->bd_name)) {
-            DEBUG_PRINT("%s is non official, replacing name...\n", res->bd_name);
+            DEBUG_PRINT("[%s] \"%s\" is non official, replacing name...\n",
+                bdaddr_to_string(res->bd_addr), res->bd_name);
             // replace device name
             memcpy(res->bd_name, PRO_CONTROLLER_NAME, sizeof(PRO_CONTROLLER_NAME));
         }
@@ -86,7 +95,7 @@ void BTA_DmSearch_hook(tBTA_DM_INQ *p_dm_inq, uint32_t services, void *p_cback)
     }
 
     if (scanIsEnabled()) {
-        // scan mode: look for every discoverable device, not only controllers
+        // scan mode: look for every discoverable BR/EDR device, not only controllers (audio devices are BR/EDR)
         p_dm_inq->mode = BTM_GENERAL_INQUIRY;
         p_dm_inq->filter_type = BTM_CLR_INQUIRY_FILTER;
         p_dm_inq->max_resps = 0;
@@ -94,11 +103,13 @@ void BTA_DmSearch_hook(tBTA_DM_INQ *p_dm_inq, uint32_t services, void *p_cback)
         return;
     }
 
-    // switch between limited and general inquiry to make sure all devices are covered
-    p_dm_inq->mode = current_inq_mode;
+    // switch between limited and general inquiry to make sure all BR/EDR devices are covered
+    // BLE is always enabled
+    p_dm_inq->mode = current_inq_mode | BTM_BLE_GENERAL_INQUIRY;
     current_inq_mode = (current_inq_mode == BTM_LIMITED_INQUIRY) ? BTM_GENERAL_INQUIRY : BTM_LIMITED_INQUIRY;
 
     // only search for peripherals
+    // BLE filtering happens in `btm_ble_is_discoverable_hook`
     p_dm_inq->filter_type = BTM_FILTER_COND_DEVICE_CLASS;
     p_dm_inq->filter_cond.dev_class_cond.dev_class_mask[0] = 0;
     p_dm_inq->filter_cond.dev_class_cond.dev_class_mask[1] = BTM_COD_MAJOR_CLASS_MASK;

@@ -11,6 +11,7 @@
 
 #include <imports.h>
 #include "bt_api.h"
+#include <bta/bta_api.h>
 #include <bloopair/ipc.h>
 
 // arm / disarm the test (called from the IPC thread, only touches flags)

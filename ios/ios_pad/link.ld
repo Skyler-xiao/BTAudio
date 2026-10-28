@@ -6,7 +6,7 @@ SECTIONS {
     . = 0x11f86000;
 
     .text : {
-        _text_start = .;
+        _pad_text_start = .;
         *(.text*);
         *(.rodata*);
         *(.data*);
@@ -19,21 +19,21 @@ SECTIONS {
         __sboxes = .;
         . += 0x900;
     }
-    _text_end = .;
+    _pad_text_end = .;
 
     . = 0x12159000;
 
     .bss : {
-        _bss_start = .;
+        _pad_bss_start = .;
         *(.bss*);
     }
-    _bss_end = .;
+    _pad_bss_end = .;
 
     /DISCARD/ : {
         *(*);
     }
 }
 
-/* The kernel maps 0xC000 for the text (pad.c, the region is free up to 0x11FC0000), the bss gets 0x8000 */
-ASSERT(_text_end - _text_start < 0xC000, "ios_pad text is too big");
-ASSERT(_bss_end - _bss_start < 0x8000, "ios_pad bss is too big");
+/* The kernel maps 0x14000 for the text (pad.c, the region is free up to 0x11FC0000), the bss gets 0x8000 */
+ASSERT(_pad_text_end - _pad_text_start < 0x14000, "ios_pad text is too big");
+ASSERT(_pad_bss_end - _pad_bss_start < 0x8000, "ios_pad bss is too big");
